@@ -1,0 +1,22 @@
+# Reinstala docker tras un update de SteamOS. El update reemplaza el rootfs
+# (/usr) y se lleva los binarios de pacman; /home, /var y el overlay de /etc
+# sobreviven — así que los runners, este servicio, el daemon.json y hasta
+# /var/lib/docker (imágenes, cachés) quedan intactos. Solo hay que reponer
+# los binarios, y este servicio lo hace solo en el siguiente arranque:
+# ConditionPathExists=! lo vuelve un no-op mientras docker exista.
+[Unit]
+Description=Reinstala docker tras un update de SteamOS (el rootfs lo borra)
+ConditionPathExists=!/usr/bin/docker
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/steamos-readonly disable
+ExecStart=/usr/bin/pacman-key --init
+ExecStart=/usr/bin/pacman-key --populate
+ExecStart=/usr/bin/pacman -Sy --noconfirm docker
+ExecStart=/usr/bin/systemctl enable --now docker
+
+[Install]
+WantedBy=multi-user.target
