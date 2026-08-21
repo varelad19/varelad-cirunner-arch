@@ -26,7 +26,10 @@ if [ ! -f config.sh ]; then
     curl -sL "https://github.com/actions/runner/releases/download/v${VER}/actions-runner-linux-x64-${VER}.tar.gz" | tar xz
 fi
 
-./config.sh --url "$URL" --token "$TOKEN" --name "$NOMBRE" --unattended
+# --replace: re-registrar sobre un nombre existente es válido (idempotencia,
+# la ley de la casa). El token de registro vive ~1 HORA: si config responde
+# 404 en Authentication, es que venció — genera otro en la web y reintenta.
+./config.sh --url "$URL" --token "$TOKEN" --name "$NOMBRE" --unattended --replace
 sudo ./svc.sh install "$USER"
 sudo ./svc.sh start
 
