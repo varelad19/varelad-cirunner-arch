@@ -1,0 +1,27 @@
+# Publica la imagen del CI a ghcr en cada cambio del Dockerfile (o a mano).
+# Corre en hospedado a propósito: construir la imagen no debe depender de que
+# la Deck esté despierta — es justo la imagen que la Deck necesita.
+name: Imagen
+
+on:
+  push:
+    branches: [main]
+    paths: [Dockerfile, .github/workflows/imagen.yaml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login a ghcr
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+      - name: Construir
+        run: docker build -t ghcr.io/varelad19/cirunner:act-24.04 .
+      - name: Publicar
+        run: docker push ghcr.io/varelad19/cirunner:act-24.04
