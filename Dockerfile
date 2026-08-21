@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends wget gpg apt-tr
  && echo "deb [signed-by=/usr/share/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb noble main" > /etc/apt/sources.list.d/adoptium.list \
  && apt-get update && apt-get install -y --no-install-recommends \
       temurin-17-jdk cmake ninja-build ccache unzip libgl1-mesa-dev \
-      libxkbcommon0 libpulse0 \
+      libxkbcommon0 libpulse0 file desktop-file-utils \
  && rm -rf /var/lib/apt/lists/*
 
 ENV JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64
@@ -36,3 +36,14 @@ RUN mkdir -p "$ANDROID_HOME/cmdline-tools" && cd /tmp \
       "ndk;27.2.12479018" "platforms;android-35" "build-tools;35.0.0" >/dev/null
 
 ENV PATH=$JAVA_HOME/bin:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+
+# linuxdeployqt para el AppImage del kiosko (taller-diagnostics#185): viaja
+# como AppImage y el contenedor no tiene FUSE — se extrae al hornear y se
+# enlaza su AppRun. Solo publica el tag `continuous` (sin pin posible); si un
+# día se mueve y rompe, este es el lugar.
+RUN cd /opt \
+ && wget -q https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage \
+ && chmod +x linuxdeployqt-continuous-x86_64.AppImage \
+ && ./linuxdeployqt-continuous-x86_64.AppImage --appimage-extract >/dev/null \
+ && rm linuxdeployqt-continuous-x86_64.AppImage \
+ && ln -s /opt/squashfs-root/AppRun /usr/local/bin/linuxdeployqt
