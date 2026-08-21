@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends wget gpg apt-tr
       libxkbcommon0 libxkbcommon-x11-0 libpulse0 file desktop-file-utils patchelf \
       libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
       libxcb-render-util0 libxcb-shape0 libxcb-xkb1 libspeechd2 libnm0 \
+      libxrandr2 libxext6 libxfixes3 libva2 libva-drm2 libva-x11-2 libvdpau1 \
  && rm -rf /var/lib/apt/lists/*
 
 ENV JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64
