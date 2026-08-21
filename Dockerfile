@@ -29,6 +29,7 @@ RUN mkdir -p "$ANDROID_HOME/cmdline-tools" && cd /tmp \
  && unzip -q commandlinetools-linux-11076708_latest.zip -d "$ANDROID_HOME/cmdline-tools" \
  && mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest" \
  && rm commandlinetools-linux-11076708_latest.zip \
+ && set +o pipefail \
  && yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null \
  && "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
       "ndk;27.2.12479018" "platforms;android-35" "build-tools;35.0.0" >/dev/null
