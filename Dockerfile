@@ -18,7 +18,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends wget gpg apt-tr
  && echo "deb [signed-by=/usr/share/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb noble main" > /etc/apt/sources.list.d/adoptium.list \
  && apt-get update && apt-get install -y --no-install-recommends \
       temurin-17-jdk cmake ninja-build ccache unzip libgl1-mesa-dev \
-      libxkbcommon0 libpulse0 file desktop-file-utils patchelf \
+      libxkbcommon0 libxkbcommon-x11-0 libpulse0 file desktop-file-utils patchelf \
+      libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
+      libxcb-render-util0 libxcb-shape0 libxcb-xkb1 libspeechd2 libnm0 \
  && rm -rf /var/lib/apt/lists/*
 
 ENV JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64
