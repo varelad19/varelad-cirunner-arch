@@ -19,6 +19,7 @@ instalado con pacman. Pero `/home`, `/var` y el overlay de `/etc`
 | Runners (binarios + `_work`) | `/home/deck/runner-*` | ✅ |
 | Servicios systemd (runners y reinstalador) | `/etc` (overlay) | ✅ |
 | `daemon.json` de docker | `/etc/docker` (overlay) | ✅ |
+| `gai.conf` (IPv4 primero — sin él, timeouts de 100 s a codeload) | `/etc` (overlay) | ✅ |
 | Imágenes y estado de docker | `/var/lib/docker` | ✅ |
 | **Binarios de docker** | `/usr` (rootfs) | ❌ → los repone `reinstalar-docker.service` al arrancar |
 

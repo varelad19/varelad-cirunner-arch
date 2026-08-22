@@ -28,4 +28,19 @@ sudo cp systemd/reinstalar-docker.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable reinstalar-docker.service
 
+# IPv4 primero (aprendido el 22-ago a golpes de timeout): la red publica AAAA
+# que no alcanza, y todo lo que no hace Happy Eyeballs —el runner de Actions
+# incluido— muere esperando 100 s por conexión a codeload.github.com. Es la
+# MISMA enfermedad que la app curó con Ipv4Nam, ahora a nivel sistema: la
+# tabla RFC 6724 completa con ::ffff:0:0/96 subido de 35 a 100 (una sola
+# línea `precedence` NO basta: glibc descarta el resto del default). Vive en
+# el overlay de /etc: sobrevive updates de SteamOS. Idempotente.
+sudo tee /etc/gai.conf > /dev/null <<'GAI'
+precedence  ::1/128       50
+precedence  ::/0          40
+precedence  2002::/16     30
+precedence ::/96          20
+precedence ::ffff:0:0/96 100
+GAI
+
 echo "Listo. Registra los runners con: scripts/registrar-runner.sh <nombre> <url-repo> <token>"
