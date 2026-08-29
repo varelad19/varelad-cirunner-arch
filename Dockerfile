@@ -50,3 +50,16 @@ RUN cd /opt \
  && ./linuxdeployqt-continuous-x86_64.AppImage --appimage-extract >/dev/null \
  && rm linuxdeployqt-continuous-x86_64.AppImage \
  && ln -s /opt/squashfs-root/AppRun /usr/local/bin/linuxdeployqt
+
+# El Chromium de Playwright para el job e2e de release (td#332, #1): el
+# navegador FIJO en la imagen, en ruta compartida — el pin va EXACTO al de
+# e2e/package.json de taller-diagnostics (subir uno = subir el otro y
+# republicar; un npm ci con otra versión bajaría un navegador nuevo en cada
+# corrida, que es justo lo que esta imagen existe para evitar). xvfb es el
+# plan B documentado contra el managed challenge de Cloudflare: si el
+# headless no pasa, `xvfb-run npx playwright test` corre headed.
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
+RUN apt-get update && apt-get install -y --no-install-recommends xvfb \
+ && npm install -g playwright@1.62.1 \
+ && playwright install --with-deps chromium \
+ && rm -rf /var/lib/apt/lists/*
