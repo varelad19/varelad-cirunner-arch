@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# RETIRADO el 1-oct-2026 (varelad19/varelad-cluster#254): el CI ya no corre en
+# la Steam Deck, que quedó sin runners y sin docker. Se conserva por si un día
+# hay que volver a armarla; ver «La Steam Deck» en el README.
+#
 # Bootstrap del CI en la Steam Deck (una sola vez por consola):
 # docker con las redes bien puestas + el servicio que lo revive tras cada
 # update de SteamOS. Los runners se registran aparte (registrar-runner.sh),
